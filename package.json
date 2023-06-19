@@ -1,3 +1,6 @@
+"scripts": {
+  "test": "your-test-command-here"
+}
 {
   "name": "host",
   "version": "1.0.0",
