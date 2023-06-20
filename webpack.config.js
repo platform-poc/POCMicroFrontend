@@ -1,10 +1,5 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
-// webpack.config.js
-module.exports = {
-  mode: 'development',
-  // Rest of your Webpack configuration...
-};
 const deps = require("./package.json").dependencies;
 module.exports = (_, argv) => ({
   output: {
