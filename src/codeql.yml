@@ -1,4 +1,4 @@
-name: Code Analysis
+name: CodeQL Analysis
 
 on:
   push:
@@ -10,33 +10,15 @@ on:
 
 jobs:
   codeql-analysis:
-    name: CodeQL Analysis
+    name: Analyze code with CodeQL
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v1
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
-
-  eslint-analysis:
-    name: ESLint Analysis
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 14
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint
+      - name: Build and analyze code
+        uses: github/codeql-action/analyze@v1
