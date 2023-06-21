@@ -1,0 +1,33 @@
+name: Code Analysis
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  code-analysis:
+    name: Code Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+
+      - name: Build CodeQL database
+        uses: github/codeql-action/analyze@v2
+        with:
+          languages: javascript
+          query: "javascript-code-scanning.qls"
