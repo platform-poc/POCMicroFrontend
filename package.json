@@ -1,4 +1,7 @@
 {
+  "scripts": {
+  "lint": "eslint"
+},
   "name": "host",
   "version": "1.0.0",
   "scripts": {
