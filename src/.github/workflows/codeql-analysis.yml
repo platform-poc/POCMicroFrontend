@@ -1,59 +1,35 @@
-# supported CodeQL languages.
-#
-name: "CodeQL"
+name: CI Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main" ]
-  schedule:
-    - cron: '45 5 * * 3'
+    branches:
+      - main
 
 jobs:
-  analyze:
-    name: Analyze
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'javascript' ]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby', 'swift' ]
-        # Use only 'java' to analyze code written in Java, Kotlin or both
-        # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
-        # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: ${{ matrix.language }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
 
-    # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+      - name: Install dependencies
+        run: npm install
 
-    # Perform CodeQL Analysis
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-      with:
-        category: "/language:${{matrix.language}}"
+      - name: Run ESLint
+        run: npm run lint
 
-    # Generate and upload build artifact
-    - name: Generate Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: build-artifact
-        path: my-artifact  # Replace with the path to your build artifact directory
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+
+      - name: Build and analyze code
+        uses: github/codeql-action/analyze@v1
