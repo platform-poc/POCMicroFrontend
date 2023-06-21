@@ -56,4 +56,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: build-artifact
-        path: path/to/artifact/  # Replace with the path to your build artifact directory
+        path: dist/  # Replace with the path to your build artifact directory
