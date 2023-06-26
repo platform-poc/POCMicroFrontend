@@ -1,23 +1,48 @@
-name: CodeQL Pipeline
-on: [push]
+name: Check
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+permissions:
+  contents: read
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  main:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      # Run your CodeQL analysis
-      - name: CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+      - uses: actions/checkout@v3
         with:
-          languages: javascript
+          persist-credentials: false
 
-      # Publish artifacts
-      - name: Publish artifacts
-        uses: actions/upload-artifact@v2
+      - uses: actions/setup-node@v3
         with:
-          name: CodeQL results
-          path: codeql-results
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache node_modules
+        id: cache-node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node_modules-${{ matrix.os }}-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
+
+      - name: npm ci
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit
+
+      - name: ESLint
+        run: npx --no-install eslint .
+
+      - name: Prettier
+        run: npx --no-install prettier --check .
+
+      - name: Build
+        run: npm run build
