@@ -27,11 +27,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
     - name: Install CodeQL CLI
       run: |
-        curl -LsS https://github.com/github/codeql-cli-binaries/releases/latest/download/codeql.zip > codeql.zip
-        unzip -qq codeql.zip
-        export PATH="$PWD/codeql:$PATH"
+        pip install codeql
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
