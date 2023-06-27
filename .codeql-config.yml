@@ -1,0 +1,25 @@
+languages:
+  - javascript
+  - python
+
+queries:
+  - javascript/ql/src/Security/CWE-78-OS-Command-Injection.ql
+  - python/ql/src/Security/CWE-89-SQL-Injection.ql
+
+exclusions:
+  - src/generated/
+  - test/
+
+database:
+  name: codeql-db
+  location: codeql-database/
+
+code-scanning:
+  tool-integrations:
+    - find-sec-bugs
+    - bandit
+    - eslint
+
+additional-configuration:
+  query-timeout: 300
+  cache-database: true
