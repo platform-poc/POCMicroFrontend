@@ -52,7 +52,7 @@ jobs:
 
           # Example: Copying the report to a specific directory
           mkdir -p reports
-          cp ${{ runner.workspace }}/.codeql/results/* reports/
+          cp ${{ runner.workspace }}/codeql-results/* reports/
 
       - name: Upload Report
         uses: actions/upload-artifact@v2
