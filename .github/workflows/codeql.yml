@@ -1,4 +1,4 @@
-name: "CodeQL"
+name: CodeQL
 
 on:
   push:
@@ -22,40 +22,32 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'javascript' ]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby', 'swift' ]
-        # Use only 'java' to analyze code written in Java, Kotlin or both
-        # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
-        # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: ${{ matrix.language }}
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
-        with:
-          category: "/language:${{matrix.language}}"
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:${{matrix.language}}"
+        
+    - name: Generate Report
+      run: |
+        codeql-bundle create ${{ runner.workspace }}/codeql-bundle ${{ runner.workspace }}/.codeql/results/
+        mkdir ${{ runner.workspace }}/reports
+        codeql-bundle extract ${{ runner.workspace }}/codeql-bundle --output-dir ${{ runner.workspace }}/reports
 
-      - name: Generate Report
-        run: |
-          # Generate the report based on the CodeQL analysis results
-          # Replace this with your own script or command
-          echo "Generating CodeQL report..."
-
-          # Example: Copying the report to a specific directory
-          mkdir -p reports
-          cp ${{ runner.workspace }}/codeql-results/* reports/
-
-      - name: Upload Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: CodeQL Report
-          path: reports/
+    - name: Publish Report
+      uses: actions/upload-artifact@v2
+      with:
+        name: CodeQL report
+        path: ${{ runner.workspace }}/reports
