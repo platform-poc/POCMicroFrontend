@@ -1,4 +1,4 @@
-name: CodeQL
+name: "CodeQL"
 
 on:
   push:
@@ -11,34 +11,29 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
     permissions:
       actions: read
       contents: read
       security-events: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'javascript' ]
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up CodeQL CLI
+    - name: Install CodeQL CLI
       run: |
-        mkdir codeql
-        cd codeql
-        wget https://github.com/github/codeql-cli-binaries/releases/latest/download/codeql-linux64.zip
-        unzip codeql-linux64.zip
-        export PATH=$PATH:$PWD/codeql
+        curl -sSL https://github.com/github/codeql-cli-binaries/releases/latest/download/codeql-linux64.zip --output codeql-linux64.zip
+        sudo apt-get install -y unzip
+        unzip -qq codeql-linux64.zip -d codeql
+        sudo mv codeql/codeql /usr/local/bin/codeql
+        codeql --version
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        languages: ${{ matrix.language }}
+        languages: javascript
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v2
@@ -46,16 +41,10 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
       with:
-        category: "/language:${{matrix.language}}"
-        
-    - name: Generate Report
-      run: |
-        codeql-bundle create ${{ runner.workspace }}/codeql-bundle ${{ runner.workspace }}/.codeql/results/
-        mkdir ${{ runner.workspace }}/reports
-        codeql-bundle extract ${{ runner.workspace }}/codeql-bundle --output-dir ${{ runner.workspace }}/reports
+        category: "/language:javascript"
 
-    - name: Publish Report
+    - name: Upload CodeQL results
       uses: actions/upload-artifact@v2
       with:
-        name: CodeQL report
-        path: ${{ runner.workspace }}/reports
+        name: CodeQL results
+        path: .codeql/results
