@@ -1,5 +1,8 @@
 name: CodeQL Pipeline
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -9,15 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Run your CodeQL analysis
       - name: CodeQL Analysis
         uses: github/codeql-action/analyze@v1
         with:
           languages: javascript
 
-      # Publish artifacts
-      - name: Publish artifacts
+      - name: Publish CodeQL results
         uses: actions/upload-artifact@v2
         with:
-          name: CodeQL results
+          name: CodeQL Results
           path: codeql-results
