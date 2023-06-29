@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Build and Analyze with SonarQube
-        run: npm run sonar
+      - name: Analyze with SonarQube
+        run: npx sonarqube-scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
