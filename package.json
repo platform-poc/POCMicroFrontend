@@ -1,6 +1,7 @@
 {
   "scripts": {
   "lint": "eslint"
+  "sonar": "sonar-scanner"
 },
   "name": "host",
   "version": "1.0.0",
