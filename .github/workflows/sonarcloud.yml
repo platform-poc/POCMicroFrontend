@@ -22,6 +22,6 @@ jobs:
         run: npm install
 
       - name: Analyze with SonarQube
-        run: npx sonarqube-scanner -Dsonar.host.url=https://sonarcloud.io
+        run: npx sonarqube-scanner -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=poc-ikea
         env:
            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
