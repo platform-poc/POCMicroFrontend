@@ -20,7 +20,12 @@ jobs:
           service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
           project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
 
+      - name: Add storage permissions to service account
+        run: |
+          gcloud projects add-iam-policy-binding ${{ secrets.GCLOUD_PROJECT_ID }} \
+            --member serviceAccount:${{ secrets.GCLOUD_SERVICE_EMAIL }} \
+            --role roles/storage.objectCreator
+
       - name: Build and deploy to Google Cloud Storage
         run: |
-          # Replace 'project-folder-path' with the path to the project folder within the GitHub Actions workspace
           gsutil -m cp -r ${{ github.workspace }} gs://microfrontendpoc/
