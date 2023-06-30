@@ -22,5 +22,5 @@ jobs:
 
       - name: Build and deploy to Google Cloud Storage
         run: |
-          # Modify the following commands as per your project requirements
-          gsutil -m cp -r ./POChost gs://microfrontendpoc/
+          # Replace 'project-folder-path' with the relative path to your project folder
+          gsutil -m cp -r ./platform-poc/POChost/** gs://microfrontendpoc/
