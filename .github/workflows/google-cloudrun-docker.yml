@@ -22,5 +22,5 @@ jobs:
 
       - name: Build and deploy to Google Cloud Storage
         run: |
-          # Replace 'project-folder-path' with the relative path to your project folder
-          gsutil -m cp -r ./platform-poc/POChost/** gs://microfrontendpoc/
+          # Replace 'project-folder-path' with the path to the project folder within the GitHub Actions workspace
+          gsutil -m cp -r ${{ github.workspace }} gs://microfrontendpoc/
