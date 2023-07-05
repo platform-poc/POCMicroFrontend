@@ -23,9 +23,6 @@ jobs:
         run: npx eslint build docs lib script spec-main \
              --format=node_modules/@microsoft/eslint-formatter-sarif/sarif.js \
              --output-file=results.sarif || true
-      - name: Debug
-        run: |
-         ls -la /home/runner/work/POChost/POChost/5464252561/
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v2
         with:
