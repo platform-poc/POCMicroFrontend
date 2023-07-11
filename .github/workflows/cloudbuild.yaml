@@ -24,20 +24,20 @@ jobs:
         with:
           context: .
           push: false
-          tags: gcr.io/${{ env.PROJECT_ID }}/POChost
+          tags: gcr.io/${{ env.PROJECT_ID }}/pochost
 
       - name: Push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          tags: gcr.io/${{ env.PROJECT_ID }}/POChost
+          tags: gcr.io/${{ env.PROJECT_ID }}/pochost
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
-          image: gcr.io/${{ env.PROJECT_ID }}/POChost
+          image: gcr.io/${{ env.PROJECT_ID }}/pochost
           service: POChost
           region: us-central1
           platform: managed
