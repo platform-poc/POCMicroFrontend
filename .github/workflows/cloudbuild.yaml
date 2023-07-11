@@ -1,0 +1,43 @@
+name: cloudbuild
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'gcr.io/cloud-builders/docker'
+        args:
+          - 'build'
+          - '-t'
+          - 'gcr.io/${{ env.clean-mason-391409 }}/POChost'
+          - '.'
+
+      - name: 'gcr.io/cloud-builders/docker'
+        args:
+          - 'push'
+          - 'gcr.io/${{ env.clean-mason-391409 }}/POChost'
+
+      - name: 'gcr.io/cloud-builders/gcloud'
+        args:
+          - 'run'
+          - 'deploy'
+          - 'POChost'
+          - '--image'
+          - 'gcr.io/${{ env.clean-mason-391409 }}/POChost'
+          - '--region'
+          - 'us-central1'
+          # Add any additional flags or configurations as needed
+
+    timeout: 1800s
+    options:
+      logging: 'gs://hostapp_ikeapoc_com'
+    env:
+      PROJECT_ID: clean-mason-391409
