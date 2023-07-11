@@ -1,3 +1,3 @@
 export const tasksConfig = {
-    baseUrl: "http://localhost:9080",
+    baseUrl: "https://poc-ikea-service-znatn5xqsa-nw.a.run.app",
 }
