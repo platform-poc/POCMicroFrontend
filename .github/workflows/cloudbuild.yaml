@@ -13,31 +13,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 'gcr.io/cloud-builders/docker'
-        args:
-          - 'build'
-          - '-t'
-          - 'gcr.io/${{ env.clean-mason-391409 }}/POChost'
-          - '.'
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: 'gcr.io/cloud-builders/docker'
-        args:
-          - 'push'
-          - 'gcr.io/${{ env.clean-mason-391409 }}/POChost'
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: false
+          tags: gcr.io/${{ env.clean-mason-391409}}/POChost
 
-      - name: 'gcr.io/cloud-builders/gcloud'
-        args:
-          - 'run'
-          - 'deploy'
-          - 'POChost'
-          - '--image'
-          - 'gcr.io/${{ env.clean-mason-391409 }}/POChost'
-          - '--region'
-          - 'us-central1'
+      - name: Push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: gcr.io/${{ env.clean-mason-391409}}/POChost
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@main
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          image: gcr.io/${{ env.clean-mason-391409}}/POChost
+          service: POChost
+          region: us-central1
+          platform: managed
           # Add any additional flags or configurations as needed
 
-    timeout: 1800s
-    options:
-      logging: 'gs://hostapp_ikeapoc_com'
     env:
       PROJECT_ID: clean-mason-391409
