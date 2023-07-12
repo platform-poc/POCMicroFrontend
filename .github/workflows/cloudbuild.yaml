@@ -24,7 +24,7 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           create_credentials_file: true
-          workload_identity_provider: 'projects/1366473574/locations/global/workloadIdentityPools/githubactionspool/providers/github'
+          workload_identity_provider: 'projects/clean-mason-391409/locations/global/workloadIdentityPools/githubactionspool/providers/github'
           service_account: 'githubactions@clean-mason-391409.iam.gserviceaccount.com'
           
       - name: Set up Docker Buildx
