@@ -52,6 +52,5 @@ jobs:
           region: us-central1
           platform: managed
           # Add any additional flags or configurations as needed
-
     env:
       PROJECT_ID: clean-mason-391409
