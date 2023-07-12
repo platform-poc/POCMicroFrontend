@@ -11,11 +11,22 @@ on:
 
 jobs:
   build:
+    # Allow the job to fetch a GitHub ID token
+    permissions:
+      id-token: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          create_credentials_file: true
+          workload_identity_provider: 'projects/1366473574/locations/global/workloadIdentityPools/githubactionspool/providers/github'
+          service_account: 'pranavp030318@gmail.com'
+          
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
