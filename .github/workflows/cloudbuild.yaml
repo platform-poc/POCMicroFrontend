@@ -46,7 +46,7 @@ jobs:
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
+       #   service_account_key: ${{ secrets.GCP_SA_KEY }}
           image: gcr.io/${{ env.PROJECT_ID }}/poc-ikea-service
           service: POChost
           region: us-central1
