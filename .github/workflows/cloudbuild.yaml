@@ -13,8 +13,8 @@ jobs:
   build:
     # Allow the job to fetch a GitHub ID token
     permissions:
-      id-token: write
-      contents: read
+      contents: 'read'
+      id-token: 'write'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
