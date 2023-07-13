@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v2
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v1'
+        uses: 'google-github-actions/auth@v0'
         with:
           #token_format: 'access_token'
           workload_identity_provider: 'projects/1366473574/locations/global/workloadIdentityPools/githubactionspool/providers/github'
@@ -35,19 +35,19 @@ jobs:
         with:
           context: .
           push: false
-          tags: gcr.io/${{ env.PROJECT_ID }}/poc-ikea-service
+          tags: gcr.io/${{ env.PROJECT_ID }}/pochost
 
       - name: Push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          tags: gcr.io/${{ env.PROJECT_ID }}/poc-ikea-service
+          tags: gcr.io/${{ env.PROJECT_ID }}/pochost                                        
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
-          image: gcr.io/${{ env.PROJECT_ID }}/poc-ikea-service
+          image: gcr.io/${{ env.PROJECT_ID }}/pochost
           service: POChost
           region: us-central1
           platform: managed
