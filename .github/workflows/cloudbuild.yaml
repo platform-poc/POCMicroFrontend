@@ -41,7 +41,7 @@ jobs:
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           image: gcr.io/${{ env.PROJECT_ID }}/pochost
-          service: POChost
+          service: pochost
           region: us-central1
           platform: managed
           # Add any additional flags or configurations as needed
