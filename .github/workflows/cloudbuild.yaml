@@ -8,7 +8,10 @@ on:
     branches:
       - "main"
   workflow_dispatch:
-
+env:
+    PROJECT_ID: clean-mason-391409 # TODO: update Google Cloud project id
+    SERVICE: pochost # TODO: update Cloud Run service name
+    REGION: europe-west2 # TODO: update Cloud Run service region
 jobs:
   build:
     # Allow the job to fetch a GitHub ID token
