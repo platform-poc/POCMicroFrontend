@@ -1,55 +1,37 @@
-name: cloudbuild
+name: Deploy to Cloud Run
 
 on:
   push:
-    branches:
-      - "main"
-  pull_request:
-    branches:
-      - "main"
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/setup-gcloud@v0.4.0
-        with:
-          project_id: ${{ env.PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Build Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: false
-          tags: gcr.io/${{ env.PROJECT_ID }}/pochost
-
-      - name: Push Docker image
-        uses: docker/build-push-action@v3
-        with:
-          provenance: false
-          #tags: user/app:latest
-          context: .
-          push: true
-          tags: gcr.io/${{ env.PROJECT_ID }}/pochost
-
-      - name: Deploy to Cloud Run
-        uses: google-github-actions/deploy-cloudrun@main
-        with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          image: gcr.io/${{ env.PROJECT_ID }}/pochost
-          service: POChost
-          region: us-central1
-          platform: managed
-          # Add any additional flags or configurations as needed
+    branches: [ "main" ]
 
 env:
-  PROJECT_ID: clean-mason-391409
+  PROJECT_ID: clean-mason-391409 # TODO: update Google Cloud project id
+  SERVICE: pochost # TODO: update Cloud Run service name
+  REGION: europe-west2 # TODO: update Cloud Run service region
+
+jobs:
+  deploy:
+    # Add 'id-token' with the intended permissions for workload identity federation
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Google Auth
+        id: auth
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+
+      - name: Build and Push Docker Image
+        run: |
+          gcloud builds submit --tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} ./ --project ${{ env.PROJECT_ID }}
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE }} --quiet --platform managed --region ${{ env.REGION }} --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} --project ${{ env.PROJECT_ID }}
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}
