@@ -36,10 +36,10 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           provenance: false
-          tags: user/app:latest
+          #tags: user/app:latest
           context: .
           push: true
-          #tags: gcr.io/${{ env.PROJECT_ID }}/pochost
+          tags: gcr.io/${{ env.PROJECT_ID }}/pochost
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
