@@ -34,6 +34,6 @@ jobs:
         run: |
           gcloud iam service-accounts add-iam-policy-binding terraform-sa@clean-mason-391409.iam.gserviceaccount.com \
             --role=roles/iam.workloadIdentityUser \
-            --member="principal://iam.googleapis.com/projects/clean-mason-391409/locations/global/workloadIdentityPools/githubactionspool/subject/google.subject"
+            --member="principal://iam.googleapis.com/projects/1366473574/locations/global/workloadIdentityPools/githubactionspool/subject/google.subject"
 
       # Rest of the workflow steps...
