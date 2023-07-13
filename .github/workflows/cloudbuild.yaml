@@ -30,8 +30,16 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           gcloud builds submit --tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} ./ --project ${{ env.PROJECT_ID }}
+
+      - name: Authenticate with gcloud CLI
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}" | base64 --decode > /tmp/key.json
+          gcloud auth activate-service-account --key-file=/tmp/key.json
+          gcloud auth configure-docker --quiet
+
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.SERVICE }} --quiet --platform managed --region ${{ env.REGION }} --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} --project ${{ env.PROJECT_ID }}
+
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
