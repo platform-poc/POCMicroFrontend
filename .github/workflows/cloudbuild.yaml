@@ -42,14 +42,14 @@ jobs:
           gcloud builds submit --tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} ./ --project ${{ env.PROJECT_ID }}
           
       - name: Run SonarCloud analysis
-        uses: sonarsource/sonarcloud-github-action@master
+        uses: sonarsource/sonarcloud-github-action@main
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
            extraProperties: |
             sonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             sonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            sonar.links.homepage=https://sonarcloud.io/api/project_badges/measure?project=poc-ikea_quest-ikea&metric=alert_status
+            sonar.links.homepage=https://sonarcloud.io/projects
           
       - name: Run SonarLint
         run: sonarlint
