@@ -11,10 +11,11 @@ on:
   
 env:
   PROJECT_ID: clean-mason-391409 # TODO: update Google Cloud project id
-  SERVICE: pochost # TODO: update Cloud Run service name
-  REGION: europe-west2 # TODO: update Cloud Run service region
+  SERVICE: pochost2 # TODO: update Cloud Run service name
+  REGION: europe-west2
   SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
   SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+
 jobs:
   build:
     # Allow the job to fetch a GitHub ID token
@@ -42,14 +43,22 @@ jobs:
         run: |
           gcloud builds submit --tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} ./ --project ${{ env.PROJECT_ID }}
           
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          
+      - name: Install dependencies
+        run: npm install
+        
       - name: Run SonarCloud analysis
         uses: sonarsource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-           extraProperties: |
-            SONAR_PROJECT_KEY=${{ env.SONAR_PROJECT_KEY }}
-            SONAR_ORGANIZATION=${{ env.SONAR_ORGANIZATION }}
+          extraProperties: |
+            sonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+            sonar.organization=${{ env.SONAR_ORGANIZATION }}
             sonar.links.homepage=https://sonarcloud.io/project/overview?id=${{ env.SONAR_PROJECT_KEY }}
           
       - name: Run SonarLint
@@ -59,8 +68,7 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@main
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
-          image: gcr.io/${{ env.PROJECT_ID }}/pochost
-          service: pochost
+          image: gcr.io/${{ env.PROJECT_ID }}/pochost2
+          service: pochost2
           region: europe-west2
-          platform: managed # Specify the platform as "managed"
-          # Add any additional flags or configurations as needed
+          platform: managed
