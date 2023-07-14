@@ -15,6 +15,6 @@ ADD nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=build /app /usr/share/nginx/html
 
-EXPOSE 80
+EXPOSE 8082
 
 CMD ["nginx", "-g", "daemon off;"]
