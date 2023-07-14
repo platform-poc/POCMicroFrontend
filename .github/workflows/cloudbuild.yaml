@@ -49,7 +49,7 @@ jobs:
            extraProperties: |
             sonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             sonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            sonar.links.homepage=https://sonarcloud.io/organizations/poc-ikea/projects
+            sonar.links.homepage=https://sonarcloud.io/project/overview?id=POChost
           
       - name: Run SonarLint
         run: sonarlint
@@ -61,5 +61,5 @@ jobs:
           image: gcr.io/${{ env.PROJECT_ID }}/pochost
           service: pochost
           region: europe-west2
-          platform: managed
+          platform: managed # Specify the platform as "managed"
           # Add any additional flags or configurations as needed
