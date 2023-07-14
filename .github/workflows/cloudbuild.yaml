@@ -45,6 +45,8 @@ jobs:
         uses: sonarsource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: "POChost" # TODO: replace with your SonarCloud project key
+          SONAR_ORGANIZATION: "poc-ikea" # TODO: replace with your SonarCloud organization
           
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
