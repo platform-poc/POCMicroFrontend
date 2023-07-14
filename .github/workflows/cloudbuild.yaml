@@ -46,10 +46,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          projectBaseDir: ./ https://sonarcloud.io/project/information?id=POChost
+          projectBaseDir: ./path/to/your/project # TODO: update to the path of your project
           extraProperties: |
             sonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             sonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            sonar.links.homepage=https://sonarcloud.io/project/information?id=POChost
           
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
