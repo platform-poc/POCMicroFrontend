@@ -50,7 +50,7 @@ jobs:
           extraProperties: |
             sonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             sonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            sonar.links.homepage=https://sonarcloud.io/project/information?id=POChost
+            sonar.links.homepage=https://sonarcloud.io/organizations/poc-ikea/projects
           
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
