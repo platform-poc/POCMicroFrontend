@@ -50,7 +50,7 @@ jobs:
            extraProperties: |
             SONAR_PROJECT_KEY=${{ env.SONAR_PROJECT_KEY }}
             SONAR_ORGANIZATION=${{ env.SONAR_ORGANIZATION }}
-            sonar.links.homepage=https://sonarcloud.io/project/overview?id=POChost
+            sonar.links.homepage=https://sonarcloud.io/project/overview?id=${{ env.SONAR_PROJECT_KEY }}
           
       - name: Run SonarLint
         run: sonarlint
