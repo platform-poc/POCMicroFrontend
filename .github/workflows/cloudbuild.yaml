@@ -49,7 +49,7 @@ jobs:
            extraProperties: |
             sonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             sonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            sonar.links.homepage=https://sonarcloud.io/project/overview?id=POChost
+            sonar.links.homepage=https://sonarcloud.io/api/project_badges/measure?project=poc-ikea_quest-ikea&metric=alert_status
           
       - name: Run SonarLint
         run: sonarlint
