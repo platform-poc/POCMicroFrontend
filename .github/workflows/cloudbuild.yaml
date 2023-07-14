@@ -46,8 +46,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          #projectBaseDir: PoC-IKEA/host # TODO: update to the path of your project
-          extraProperties: |
+           extraProperties: |
             sonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             sonar.organization=${{ secrets.SONAR_ORGANIZATION }}
             sonar.links.homepage=https://sonarcloud.io/organizations/poc-ikea/projects
