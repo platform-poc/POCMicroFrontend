@@ -13,7 +13,8 @@ env:
   PROJECT_ID: clean-mason-391409 # TODO: update Google Cloud project id
   SERVICE: pochost # TODO: update Cloud Run service name
   REGION: europe-west2 # TODO: update Cloud Run service region
-
+  SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+  SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
 jobs:
   build:
     # Allow the job to fetch a GitHub ID token
@@ -47,8 +48,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
            extraProperties: |
-            sonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-            sonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            SONAR_PROJECT_KEY=${{ env.SONAR_PROJECT_KEY }}
+            SONAR_ORGANIZATION=${{ env.SONAR_ORGANIZATION }}
             sonar.links.homepage=https://sonarcloud.io/projects
           
       - name: Run SonarLint
