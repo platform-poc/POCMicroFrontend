@@ -45,8 +45,11 @@ jobs:
         uses: sonarsource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }} # TODO: replace with the secret storing your SonarCloud project key
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }} # TODO: replace with the secret storing your SonarCloud organization
+        with:
+          projectBaseDir: ./ https://sonarcloud.io/project/information?id=POChost
+          extraProperties: |
+            sonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            sonar.organization=${{ secrets.SONAR_ORGANIZATION }}
           
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
