@@ -46,12 +46,15 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          projectBaseDir: ./POChost # TODO: update to the path of your project
+          projectBaseDir: ./PoC-IKEA/host # TODO: update to the path of your project
           extraProperties: |
             sonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             sonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            sonar.links.homepage=https://sonarcloud.io/project/overview?id=POChost
+            sonar.links.homepage=https://sonarcloud.io/projects
           
+      - name: Run SonarLint
+        run: sonarlint
+      
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
         with:
