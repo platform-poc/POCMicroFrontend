@@ -13,6 +13,8 @@ env:
     PROJECT_ID: clean-mason-391409 # TODO: update Google Cloud project id
     SERVICE: pochost # TODO: update Cloud Run service name
     REGION: europe-west2 # TODO: update Cloud Run service region
+    SONAR_PROJECT_KEY: POChost
+    SONAR_ORGANIZATION: poc-ikea
 jobs:
   build:
     # Allow the job to fetch a GitHub ID token
@@ -44,8 +46,6 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: POChost
-          SONAR_ORGANIZATION: poc-ikea
           SONAR_PROJECT_NAME: PoC-IKEAhost
           SONAR_LANGUAGE: ts
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}     
