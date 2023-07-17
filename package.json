@@ -1,10 +1,8 @@
- {  "scripts": {
-  "lint": "eslint src"
-  }
-},
-  "name": "host",
+{
+ "name": "host",
   "version": "1.0.0",
   "scripts": {
+    "lint": "eslint src",
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
     "build:start": "cd dist && PORT=8080 npx serve",
@@ -41,3 +39,4 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
+}
