@@ -33,6 +33,14 @@ jobs:
           
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+        # Lint
+      - name: Lint
+        run: |
+            LINT
+    # Unit Test
+      - name: Unit Test
+        run: |
+         UNIT
       - name: Build and Push Docker Image
         run: |
           gcloud builds submit --tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} ./ --project ${{ env.PROJECT_ID }}                                     
