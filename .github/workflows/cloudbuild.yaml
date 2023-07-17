@@ -36,11 +36,11 @@ jobs:
          # Lint
       - name: Lint
         run: |
-         LINT
+         
     # Unit Test
       - name: Unit Test
         run: |
-         UNIT
+         
     # Push the Docker image to Google Container Registry
       - name: Build and Push Docker Image
         run: |
