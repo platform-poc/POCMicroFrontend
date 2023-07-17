@@ -1,6 +1,5 @@
 jobs:
   eslint:
-    name: Run eslint scanning
     runs-on: ubuntu-latest
     permissions:
       contents: read
