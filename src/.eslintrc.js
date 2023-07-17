@@ -1,29 +1,39 @@
-jobs:
-  eslint:
-    name: Run eslint scanning
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+"use strict";
 
-      - name: Install ESLint
-        run: |
-          npm install eslint@8.10.0
-          npm install @microsoft/eslint-formatter-sarif@2.1.7
-      - name: Run ESLint
-        run: npx eslint .
-          --config .eslintrc.js
-          --ext .js,.jsx,.ts,.tsx
-          --format @microsoft/eslint-formatter-sarif
-          --output-file eslint-results.sarif
-        continue-on-error: true
+// This is the internal ESLint config for this project itself – it’s not part of
+// the eslint-config-prettier npm package. The idea here is to extend some
+// sharable config from npm and then include the configs exposed by this package
+// as an “eat your own dogfood” test. That feels like a good test, but
+// complicates things a little sometimes.
 
-      - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: eslint-results.sarif
-          wait-for-processing: true 
+module.exports = {
+  extends: ["./.eslintrc.base.js", "./index.js", "./prettier.js"],
+  rules: {
+    "prettier/prettier": "off",
+  },
+  overrides: [
+    {
+      files: ["{bin,test,scripts}/**/*.js"],
+      rules: {
+        "no-undef": "error",
+        "no-restricted-syntax": [
+          "error",
+          {
+            selector: "SequenceExpression",
+            message:
+              "The comma operator is confusing and a common mistake. Don’t use it!",
+          },
+        ],
+        "quotes": [
+          "error",
+          "double",
+          { avoidEscape: true, allowTemplateLiterals: false },
+        ],
+      },
+    },
+    {
+      files: ["*.test.js"],
+      env: { jest: true },
+    },
+  ],
+};
