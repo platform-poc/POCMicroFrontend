@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Install ESLINT
+        run:  npm install eslint
       - name: Linting
         uses: stefanoeb/eslint-action@1.0.2
         with:
