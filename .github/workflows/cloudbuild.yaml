@@ -44,7 +44,13 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@v1.9.1
+        with:
+          projectBaseDir: src
+          args: >
+           -Dsonar.organization=poc-ikea
+           -Dsonar.projectKey=POChost
+        
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
