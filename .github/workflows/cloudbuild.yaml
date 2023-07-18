@@ -75,5 +75,10 @@ jobs:
           region: europe-west2
           platform: managed
           # Add any additional flags or configurations as needed
+      - name: Upload ESLint report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ESLint Report
+          path: /tmp/eslint-results.sarif
     env:
       PROJECT_ID: clean-mason-391409
