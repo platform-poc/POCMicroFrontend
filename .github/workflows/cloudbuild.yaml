@@ -79,6 +79,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ESLint Report
-          path: /tmp/eslint-results.sarif
+          path: src/eslint-results.sarif
     env:
       PROJECT_ID: clean-mason-391409
