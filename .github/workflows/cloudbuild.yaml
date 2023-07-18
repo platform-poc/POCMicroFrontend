@@ -34,7 +34,7 @@ jobs:
             --config .eslintrc.js
             --ext .js,.jsx,.ts,.tsx
             --format @microsoft/eslint-formatter-sarif
-            --output-file /tmp/eslint-results.sarif
+            --output-file eslint-results.sarif
 
       - name: Run lint
         run: npm run lint
@@ -79,6 +79,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ESLint Report
-          path: src/eslint-results.sarif
+          path: eslint-results.sarif
     env:
       PROJECT_ID: clean-mason-391409
