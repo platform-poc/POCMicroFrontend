@@ -1,0 +1,89 @@
+name: cloudbuild
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: clean-mason-391409
+  REGION: europe-west2
+  SONAR_PROJECT_KEY: POChost
+  SONAR_ORGANIZATION: poc-ikea
+
+jobs:
+  build-dev:
+    name: Build and Deploy to Dev Environment
+    runs-on: ubuntu-latest
+    env:
+      SERVICE: pochost-dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Rest of the steps remain the same as in the original code.
+
+      - name: Build and Push Docker Image
+        run: |
+          gcloud builds submit --tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} ./ --project ${{ env.PROJECT_ID }}
+
+      - name: Deploy to Cloud Run (Dev)
+        uses: google-github-actions/deploy-cloudrun@main
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          image: gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          platform: managed
+          # Add any additional flags or configurations as needed for the Dev environment.
+
+  build-prod:
+    name: Build and Deploy to Prod Environment
+    runs-on: ubuntu-latest
+    env:
+      SERVICE: pochost-prod
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Rest of the steps remain the same as in the original code.
+
+      - name: Build and Push Docker Image
+        run: |
+          gcloud builds submit --tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} ./ --project ${{ env.PROJECT_ID }}
+
+      - name: Deploy to Cloud Run (Prod)
+        uses: google-github-actions/deploy-cloudrun@main
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          image: gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          platform: managed
+          # Add any additional flags or configurations as needed for the Prod environment.
+
+  upload-eslint-report:
+    name: Upload ESLint report as artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Rest of the steps remain the same as in the original code.
+
+      - name: Upload ESLint report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ESLint Report
+          path: eslint-results.sarif
+
+    env:
+      PROJECT_ID: clean-mason-391409
+      SERVICE: pochost
