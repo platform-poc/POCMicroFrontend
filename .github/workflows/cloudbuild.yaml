@@ -37,10 +37,6 @@ jobs:
             --format @microsoft/eslint-formatter-sarif
             --output-file eslint-results.sarif
 
-      - name: Run lint
-        run: npm run lint
-        continue-on-error: true
-
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v0'
