@@ -1,4 +1,4 @@
-name: cloudbuild
+name: Deploy Cloud Run
 
 on:
   push:
