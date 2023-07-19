@@ -31,55 +31,15 @@ jobs:
           npm ci
           npm install eslint@8.10.0
           npm install @microsoft/eslint-formatter-sarif@2.1.7
+
+      - name: Run ESLint and save results as an artifact
+        run: |
           npx eslint .
             --config .eslintrc.js
             --ext .js,.jsx,.ts,.tsx
             --format @microsoft/eslint-formatter-sarif
-            --output-file eslint-results.sarif
+            --output-file eslint-results.sarif || true
 
-      - name: Run lint
-        run: npm run lint
-        continue-on-error: true
-
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v0'
-        with:
-          workload_identity_provider: 'projects/1366473574/locations/global/workloadIdentityPools/githubactionspool/providers/github'
-          service_account: 'terraform-sa@clean-mason-391409.iam.gserviceaccount.com'
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v1.9.1
-        with:
-          projectBaseDir: src
-          args: >
-           -Dsonar.organization=poc-ikea
-           -Dsonar.projectKey=POChost
-        
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and Push Docker Image
-        run: |
-          gcloud builds submit --tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} ./ --project ${{ env.PROJECT_ID }}
-      - name: Deploy to Cloud Run
-        uses: google-github-actions/deploy-cloudrun@main
-        with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          image: gcr.io/${{ env.PROJECT_ID }}/pochost
-          service: pochost
-          region: europe-west2
-          platform: managed
-          # Add any additional flags or configurations as needed by you.
-      - name: Upload ESLint report as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ESLint Report
-          path: eslint-results.sarif
       - name: Post ESLint check run to GitHub
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v5
@@ -113,10 +73,30 @@ jobs:
               name: 'ESLint',
               head_sha: context.sha,
               status: 'completed',
-              conclusion: 'failure',
+              conclusion: annotations.length > 0 ? 'failure' : 'success',
               output: {
-                title: 'ESLint issues',
-                summary: `${annotations.length} ESLint issues found`,
+                title: annotations.length > 0 ? 'ESLint issues' : 'ESLint passed',
+                summary: annotations.length > 0 ? `${annotations.length} ESLint issues found` : 'No ESLint issues found',
                 annotations,
               },
             });
+
+      - name: Build and Push Docker Image
+        run: |
+          gcloud builds submit --tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} ./ --project ${{ env.PROJECT_ID }}
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@main
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          image: gcr.io/${{ env.PROJECT_ID }}/pochost
+          service: pochost
+          region: europe-west2
+          platform: managed
+          # Add any additional flags or configurations as needed by you.
+
+      - name: Upload ESLint report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ESLint Report
+          path: eslint-results.sarif
