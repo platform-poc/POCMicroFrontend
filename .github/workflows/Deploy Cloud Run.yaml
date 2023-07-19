@@ -17,7 +17,7 @@ env:
   SONAR_ORGANIZATION: poc-ikea
 
 jobs:
-  build:
+  DeployCloudRun:
     permissions:
       contents: 'read'
       id-token: 'write'
