@@ -42,12 +42,6 @@ jobs:
         run: npx eslint --format=json . > eslint_report.json
         continue-on-error: true  # Continue the build even on ESLint errors
 
-      - name: Annotate Code Linting Results
-        uses: ataylorme/eslint-annotate-action@v2
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          report-json: "eslint_report.json"
-
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v0'
