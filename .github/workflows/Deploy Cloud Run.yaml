@@ -40,7 +40,7 @@ jobs:
         run: npm run lint
         continue-on-error: true
       - name: Save Code Linting Report JSON
-        run: npm run lint:report
+        run: eslint --output-file eslint_report.json --format json src
         continue-on-error: true
         
       - name: Annotate Code Linting Results
