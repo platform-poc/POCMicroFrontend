@@ -2,7 +2,7 @@
   "name": "host",
   "version": "1.0.0",
   "scripts": {
-    "lint": "eslint src",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --format json --output-file eslint_report.json --no-ignore",
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
     "build:start": "cd dist && PORT=8080 npx serve",
