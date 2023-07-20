@@ -39,7 +39,7 @@ jobs:
 
       - name: Run lint
         run: npm run lint
-        continue-on-error: true
+        continue-on-error: true  # Continue the build even on ESLint errors
 
       - name: Annotate Code Linting Results
         uses: ataylorme/eslint-annotate-action@v2
