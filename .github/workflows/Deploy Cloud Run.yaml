@@ -39,7 +39,7 @@ jobs:
         continue-on-error:  true    
 
       - name: Run lint
-        run: npx eslint --format=json . > eslint-report.json
+        run: npx eslint --format=json . > eslint_report.json
         continue-on-error: true  # Continue the build even on ESLint errors
 
       - name: Annotate Code Linting Results
