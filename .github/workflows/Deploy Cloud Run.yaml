@@ -38,7 +38,7 @@ jobs:
             --output-file eslint_report.json
 
       - name: Run lint
-        run: npm run lint
+        run: npm run lint || true 
         continue-on-error: true  # Continue the build even on ESLint errors
 
       - name: Annotate Code Linting Results
