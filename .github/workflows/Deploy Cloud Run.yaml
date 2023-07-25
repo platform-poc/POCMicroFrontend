@@ -1,9 +1,6 @@
-name: Deploy Cloud Run
+name: Pull Request Job
 
 on:
-  push:
-    branches:
-      - "main"
   pull_request:
     branches:
       - "main"
@@ -17,7 +14,7 @@ env:
   SONAR_ORGANIZATION: poc-ikea
 
 jobs:
-  DeployCloudRun:
+  PRRun:
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -40,13 +37,6 @@ jobs:
         run: npm run lint
         continue-on-error: true
 
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v0'
-        with:
-          workload_identity_provider: 'projects/1366473574/locations/global/workloadIdentityPools/githubactionspool/providers/github'
-          service_account: 'terraform-sa@clean-mason-391409.iam.gserviceaccount.com'
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
@@ -62,19 +52,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Push Docker Image
-        run: |
-          gcloud builds submit --tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }} ./ --project ${{ env.PROJECT_ID }}
-
-      - name: Deploy to Cloud Run
-        uses: google-github-actions/deploy-cloudrun@main
-        with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          image: gcr.io/${{ env.PROJECT_ID }}/pochost
-          service: pochost
-          region: europe-west2
-          platform: managed
-          # Add any additional flags or configurations as needed by you.
+     
       - name: Upload ESLint report as artifact
         uses: actions/upload-artifact@v2
         with:
